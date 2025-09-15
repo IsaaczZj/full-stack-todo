@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: todo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: todo_user
+      POSTGRESQL_PASSWORD: todo_password
+      POSTGRESQL_DATABASE: todo_db
+      POSTGRESQL_POSTGRES_PASSWORD: admin_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+
+volumes:
+  postgres_data:
+    driver: local
