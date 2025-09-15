@@ -5,7 +5,7 @@ import plus from "@/assets/icons/plus.svg";
 import Image from "next/image";
 
 const buttonVariants = tv({
-  base: "flex items-center justify-center cursor-pointer transition rounded-lg group gap-2",
+  base: "flex items-center w-full justify-center cursor-pointer transition rounded-lg group gap-2",
   variants: {
     variant: {
       primary: "bg-gray-200 hover:bg-pink-light",

@@ -9,6 +9,7 @@ const badgeVariants = tv({
     variant: {
       primary: "bg-green-light text-green-dark",
       secondary: "bg-pink-light text-pink-dark",
+      outline:'bg-transparent border border-gray-300 shadow-sm text-gray-300 font-thin'
     },
     size: {
       sm: "py-0.5 px-2",
