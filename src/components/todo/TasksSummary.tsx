@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button-styled";
 import { Container } from "../ui/container";
 import { Text } from "../ui/text";
 

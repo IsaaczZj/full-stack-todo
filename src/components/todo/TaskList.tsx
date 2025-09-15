@@ -1,5 +1,5 @@
 import { Task } from "@/types/task";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button-styled";
 import { TaskItem } from "./TaskItem";
 import { useState } from "react";
 import { Text } from "../ui/text";
@@ -49,7 +49,6 @@ export function TasksList() {
       <Button>Adicionar tarefa</Button>
       <div className="flex gap-2 items-start mt-7">
         <div className="flex items-center gap-2">
-        
           <Badge variant="primary" className="cursor-pointer">
             Todos
           </Badge>
