@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton } from "./skeleton";
-import { cn } from "@/lib/merge";
+import { cn } from "@/lib/utils";
 
 interface CheckBoxProps extends React.ComponentProps<"input"> {
   loading?: boolean;

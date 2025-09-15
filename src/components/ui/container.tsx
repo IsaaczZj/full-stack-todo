@@ -1,4 +1,4 @@
-import { cn } from "@/lib/merge";
+import { cn } from "@/lib/utils";
 import React from "react";
 
 interface ContainerProps extends React.ComponentProps<"div"> {}

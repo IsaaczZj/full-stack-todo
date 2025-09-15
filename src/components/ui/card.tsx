@@ -1,4 +1,4 @@
-import { cn } from "@/lib/merge";
+import { cn } from "@/lib/utils";
 
 interface CardProps extends React.ComponentProps<"div"> {}
 

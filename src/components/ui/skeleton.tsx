@@ -1,4 +1,4 @@
-import { cn } from "@/lib/merge";
+import { cn } from "@/lib/utils";
 import React from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 

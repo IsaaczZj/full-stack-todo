@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/merge";
+import { cn } from "@/lib/utils";
 import { tv, type VariantProps } from "tailwind-variants";
 import { Skeleton } from "./skeleton";
 
