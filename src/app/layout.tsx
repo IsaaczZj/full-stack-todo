@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Cairo, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { QueryProvider } from "@/lib/query-provider";
+import {Toaster} from '@/components/ui/sonner'
 const cairo = Cairo({
   variable: "--font-cairo",
   subsets: ["latin"],
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${cairo.variable} antialiased font-sans bg-gray-100`}>
-        {children}
+        <Toaster richColors/>
+          <QueryProvider>{children}</QueryProvider>
+        
       </body>
     </html>
   );

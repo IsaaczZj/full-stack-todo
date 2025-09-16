@@ -8,46 +8,35 @@ import { Badge } from "../ui/badge";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import { ModalTaskProps } from "./ModalTaskProps";
 import { getTasks } from "@/actions/get-tasks";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchTasks } from "@/api/fetchTasks";
+import { createNewTask } from "@/api/createNewTask";
+import { toast } from "sonner";
 export function TasksList() {
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { data: tasks = [], isLoading } = useQuery<Task[]>({
+    queryFn: fetchTasks,
+    queryKey: ["tasks"],
+  });
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { mutateAsync: createTask } = useMutation({
+    mutationFn: createNewTask,
+    onSuccess: (newTask) => {
+      queryClient.setQueryData(["tasks"], (cache = []) => [newTask, ...cache as Task[]]);
+      toast.success("Tarefa criada com sucesso");
+    },
+  });
 
-  const fetchTasks = async () => {
-    const response = await getTasks();
-    if (response) setTasks(response);
-    console.log(response);
-  };
-
-  function handleAddTask(taskData: { title: string }) {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title: taskData.title,
-      concluded: false,
-    };
-    setTasks((prev) => [...prev, newTask]);
-  }
-
-  function handleEditTask(taskData: { title: string; id?: string }) {
-    if (taskData.id) {
-      setTasks((prev) =>
-        prev.map((task) =>
-          task.id === taskData.id ? { ...task, title: taskData.title } : task
-        )
-      );
+  function handleSaveTask(taskData: { title: string; id?: string }) {
+    if (!taskData.id) {
+      createTask(taskData.title);
     }
   }
 
-  function handleToggleTask(taskId: string, concluded: boolean) {
-    setTasks((prev) =>
-      prev.map((task) => (task.id === taskId ? { ...task, concluded } : task))
-    );
-  }
+  function handleEditTask(taskData: { title: string; id?: string }) {}
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  function handleToggleTask(taskId: string, concluded: boolean) {}
+
   return (
     <section
       className="flex justify-center flex-col w-full mt-4
@@ -57,7 +46,7 @@ export function TasksList() {
         <DialogTrigger asChild>
           <Button>Adicionar tarefa</Button>
         </DialogTrigger>
-        <ModalTaskProps onSave={handleAddTask} />
+        <ModalTaskProps onSave={handleSaveTask} />
       </Dialog>
       <div className="flex gap-2 items-start mt-7">
         <div className="flex items-center gap-2">
@@ -88,7 +77,7 @@ export function TasksList() {
         !isLoading &&
         tasks.map((task) => (
           <TaskItem
-            key={task.id}
+            key={task.id!}
             task={task}
             onEdit={handleEditTask}
             onToggle={handleToggleTask}

@@ -16,9 +16,10 @@ import { Task } from "@/types/task";
 interface ModalTaskProps {
   task?: Task;
   onSave?: (taskData: { title: string; id?: string }) => void;
+  isLoading?: boolean;
 }
 
-export function ModalTaskProps({ task, onSave }: ModalTaskProps) {
+export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
   const [taskTitle, setTaskTitle] = useState(task?.title ?? "");
   const isEditing = !!task;
 
@@ -28,7 +29,7 @@ export function ModalTaskProps({ task, onSave }: ModalTaskProps) {
         title: taskTitle.trim(),
         id: task?.id,
       });
-      
+
       if (!isEditing) {
         setTaskTitle("");
       }
@@ -63,7 +64,7 @@ export function ModalTaskProps({ task, onSave }: ModalTaskProps) {
               className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-gray-200 hover:bg-pink-base"
               onClick={() => {}}
             >
-             <ButtonIcon icon="x" variant="secondary"/>
+              <ButtonIcon icon="x" variant="secondary" />
             </div>
           </DialogClose>
           <DialogClose asChild>
@@ -71,8 +72,7 @@ export function ModalTaskProps({ task, onSave }: ModalTaskProps) {
               className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark"
               onClick={handleSave}
             >
-             <ButtonIcon icon="check"/>
-             
+              <ButtonIcon icon="check" loading={isLoading} />
             </div>
           </DialogClose>
         </div>

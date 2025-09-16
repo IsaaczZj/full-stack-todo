@@ -1,12 +1,15 @@
-"use server"
-import { prisma } from "@/utils/prisma";
+"use server";
+import { prisma } from "@/lib/prisma";
 
 export const getTasks = async () => {
-  const tasks = await prisma.task.findMany();
-
-  if (!tasks) {
-    return;
+  try {
+    const tasks = await prisma.task.findMany();
+    if (!tasks) {
+      return;
+    }
+    console.log(tasks);
+    return tasks;
+  } catch (error) {
+    throw error
   }
-  console.log(tasks);
-  return tasks;
 };
