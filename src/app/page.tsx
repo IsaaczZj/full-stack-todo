@@ -18,7 +18,6 @@ export default function Home() {
   return (
     <Container>
       <Header />
-
       <TasksSummary />
       <TasksList />
       <Footer />

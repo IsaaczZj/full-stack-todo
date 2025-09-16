@@ -2,5 +2,6 @@ export interface Task {
   id: string
   title: string
   concluded: boolean
-  status:'creating' | "created"
+  createdAt: Date
+  updatedAt: Date
 }

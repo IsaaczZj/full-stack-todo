@@ -5,17 +5,24 @@ import { Skeleton } from "../ui/skeleton";
 import { CheckBox } from "../ui/checkbox";
 import { Text } from "../ui/text";
 import { ButtonIcon } from "../ui/button-icon";
-import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ModalTaskProps } from "./ModalTaskProps";
 
 interface TaskItemProps {
   task: Task;
   isLoading?: boolean;
+  onEdit?: (taskData: { title: string; id?: string }) => void;
+  onToggle?: (taskId: string, concluded: boolean) => void;
 }
-export function TaskItem({ task, isLoading }: TaskItemProps) {
-  const [taskTitle, setTaskTitle] = useState(task.title || "");
-  const [isEditing, setIsEditing] = useState(
-    task.status === "creating" || false
-  );
+
+export function TaskItem({ task, isLoading, onEdit, onToggle }: TaskItemProps) {
   if (isLoading || !task) {
     return (
       <Card className="w-full mt-4">
@@ -30,52 +37,34 @@ export function TaskItem({ task, isLoading }: TaskItemProps) {
   }
   return (
     <Card className="mt-4 w-full">
-      {!isEditing ? (
-        <div className="flex items-center gap-4">
-          <CheckBox
-            checked={task.concluded}
-            onClick={() => alert("Concluido")}
-            loading={isLoading}
-          />
-          <Text
-            className={`flex-1 ${
-              task.concluded && "line-through text-gray-300"
-            }`}
-          >
-            {task.title}
-          </Text>
+      <div className="flex items-center gap-4">
+        <CheckBox
+          checked={task.concluded}
+          onChange={(checked) => {
+            onToggle?.(task.id, checked);
+          }}
+          loading={isLoading}
+        />
+        <Text
+          className={`flex-1 ${task.concluded && "line-through text-gray-300"}`}
+        >
+          {task.title}
+        </Text>
 
-          <div className="flex items-center gap-1">
-            <ButtonIcon variant="tertiary" icon="trash" loading={isLoading} />
-            <ButtonIcon
-              variant="tertiary"
-              icon="pencil"
-              loading={isLoading}
-              onClick={() => setIsEditing(true)}
-            />
-          </div>
-        </div>
-      ) : (
-        <>
-          <form className="flex items-center gap-4">
-            <Input
-              className="flex-1 w-full"
-              onChange={({ target }) => setTaskTitle(target.value)}
-              value={taskTitle}
-              required
-              autoFocus
-            />
-            <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
+          <ButtonIcon variant="tertiary" icon="trash" loading={isLoading} />
+          <Dialog>
+            <DialogTrigger asChild>
               <ButtonIcon
-                icon="x"
-                variant="secondary"
-                onClick={() => setIsEditing(false)}
+                variant="tertiary"
+                icon="pencil"
+                loading={isLoading}
               />
-              <ButtonIcon icon="check" variant="primary" />
-            </div>
-          </form>
-        </>
-      )}
+            </DialogTrigger>
+            <ModalTaskProps task={task} onSave={onEdit} />
+          </Dialog>
+        </div>
+      </div>
     </Card>
   );
 }
