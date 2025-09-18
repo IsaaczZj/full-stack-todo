@@ -15,8 +15,10 @@ import { toast } from "sonner";
 import { deleteTask } from "@/api/deleteTask";
 import { toggleTask } from "@/api/toggleTask";
 import { updateTasks } from "@/api/updateTasks";
+import { Filters, FilterType } from "./Filters";
 export function TasksList() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState<FilterType>("completed");
   const queryClient = useQueryClient();
   const { data: tasks = [], isLoading } = useQuery<Task[]>({
     queryFn: fetchTasks,
@@ -91,7 +93,7 @@ export function TasksList() {
     }
   }
 
-  async function handleToggleTask(taskId: string, concluded: boolean) {
+  function handleToggleTask(taskId: string, concluded: boolean) {
     toggleTasks({ taskId, concluded });
   }
 
@@ -111,23 +113,10 @@ export function TasksList() {
         </DialogTrigger>
         <ModalTaskProps onSave={handleSaveTask} />
       </Dialog>
-      <div className="flex gap-2 items-start mt-7">
-        <div className="flex items-center gap-2">
-          <Badge variant="primary" className="cursor-pointer">
-            Todos
-          </Badge>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="cursor-pointer">
-            Não finalizados
-          </Badge>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="cursor-pointer">
-            Concluidos
-          </Badge>
-        </div>
-      </div>
+      <Filters
+        currentFilter={currentFilter}
+        setCurrentFilter={setCurrentFilter}
+      />
       {tasks.length === 0 && !isLoading ? (
         <Text
           as="p"
