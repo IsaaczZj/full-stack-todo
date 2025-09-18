@@ -2,7 +2,7 @@
 import { Task } from "@/types/task";
 import { Button } from "../ui/button-styled";
 import { TaskItem } from "./TaskItem";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text } from "../ui/text";
 import { Badge } from "../ui/badge";
 import { Dialog, DialogTrigger } from "../ui/dialog";
@@ -19,7 +19,6 @@ import { Filters, FilterType } from "./Filters";
 export function TasksList() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentFilter, setCurrentFilter] = useState<FilterType>("all");
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -104,22 +103,18 @@ export function TasksList() {
     if (taskData.id)
       updateTaskTitle({ id: taskData.id, title: taskData.title });
   }
-
-  useEffect(() => {
+  const filteredTasks = useMemo(() => {
     switch (currentFilter) {
       case "all":
-        setFilteredTasks(tasks);
-        break;
+        return tasks;
       case "pending":
         const pendingTasks = tasks.filter((task) => !task.concluded);
-        setFilteredTasks(pendingTasks);
-        break;
+        return pendingTasks;
       case "completed":
         const completedTasks = tasks.filter((task) => task.concluded);
-        setFilteredTasks(completedTasks);
-        break;
+        return completedTasks;
     }
-  }, [currentFilter, tasks]);
+  }, [tasks, currentFilter]);
 
   return (
     <section

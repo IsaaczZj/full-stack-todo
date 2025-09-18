@@ -3,13 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export const getTasks = async () => {
   try {
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.task.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     if (!tasks) {
       return;
     }
-    console.log(tasks);
     return tasks;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
