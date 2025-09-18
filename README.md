@@ -1,3 +1,6 @@
+<img width="912" height="671" alt="image" src="https://github.com/user-attachments/assets/7918178d-05e0-47b1-aaa6-11402e5d1bb1" />
+
+
 # Full-Stack Todo App
 
 Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack, onde o usuário pode criar, gerenciar, filtrar e excluir suas tarefas diárias.
