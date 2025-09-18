@@ -21,7 +21,7 @@ Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack
 
 ### Full-Stack:
 
-- **Next.js:** Framework React para renderização no servidor e construção de APIs.
+- **Next.js:** Framework React Full-Stack.
 - **TypeScript:** Superset do JavaScript para tipagem estática.
 - **Prisma:** ORM para Node.js e TypeScript, utilizado para interagir com o banco de dados.
 - **PostgreSQL:** Banco de dados relacional executado via Docker.
@@ -45,7 +45,7 @@ Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack
 1.  **Clone o repositório:**
 
     ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
+    git clone https://github.com/IsaaczZj/full-stack-todo.git
     ```
 
 2.  **Acesse o diretório do projeto:**
