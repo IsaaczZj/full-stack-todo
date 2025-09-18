@@ -8,8 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { fetchTasks } from "@/api/fetchTasks";
 export function TasksSummary() {
-  const allTasks = 5;
-  const concluded = 2;
   const { data: tasks = [] } = useQuery<Task[]>({
     queryFn: fetchTasks,
     queryKey: ["tasks"],

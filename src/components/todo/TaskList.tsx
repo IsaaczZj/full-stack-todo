@@ -13,6 +13,8 @@ import { fetchTasks } from "@/api/fetchTasks";
 import { createNewTask } from "@/api/createNewTask";
 import { toast } from "sonner";
 import { deleteTask } from "@/api/deleteTask";
+import { toggleTask } from "@/api/toggleTask";
+import { updateTasks } from "@/api/updateTasks";
 export function TasksList() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -21,16 +23,16 @@ export function TasksList() {
     queryKey: ["tasks"],
   });
 
-  const { mutateAsync: createTask } = useMutation({
+  const { mutate: createTask } = useMutation({
     mutationFn: createNewTask,
-    onSuccess: (newTask) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
 
       toast.success("Tarefa criada com sucesso");
       setIsDialogOpen(false);
     },
   });
-  const { mutateAsync: deletingTask } = useMutation({
+  const { mutate: deletingTask } = useMutation({
     mutationFn: deleteTask,
     onSuccess: (e) => {
       toast.success("Tarefa deletada com sucesso");
@@ -38,23 +40,65 @@ export function TasksList() {
     },
   });
 
+  const { mutate: toggleTasks } = useMutation({
+    mutationFn: toggleTask,
+    onMutate: ({ taskId, concluded }) => {
+      const previusTask = queryClient.getQueryData(["tasks"]);
+
+      queryClient.setQueryData<Task[]>(["tasks"], (previus = []) =>
+        previus.map((task) =>
+          task.id === taskId ? { ...task, concluded } : task
+        )
+      );
+      return { previusTask };
+    },
+    onError: (_, __, context) => {
+      if (context?.previusTask) {
+        queryClient.setQueryData(["tasks"], context.previusTask);
+      }
+      toast.error("Erro ao atualizar a tarefa");
+    },
+  });
+
+  const { mutate: updateTaskTitle } = useMutation({
+    mutationFn: updateTasks,
+    onMutate({ id, title }) {
+      const previusTask = queryClient.getQueryData<Task[]>(["tasks"]);
+      queryClient.setQueryData<Task[]>(["tasks"], (previus = []) =>
+        previus.map((task) => (task.id === id ? { ...task, title } : task))
+      );
+      return { previusTask };
+    },
+    onError: (_, __, context) => {
+      if (context?.previusTask) {
+        queryClient.setQueryData(["tasks"], context.previusTask);
+        toast.warning("Erro ao atualizar a tarefa");
+      }
+    },
+    onSuccess: () => {
+      toast.success("Tarefa atuzalizada com sucesso");
+    },
+  });
+
   function handleSaveTask(taskData: { title: string; id?: string }) {
     if (!taskData.id) {
       if (taskData.title.trim() === "") {
-        toast.warning("Título vazio", {
-          description: "Digite o título da tarefa",
-        });
+        toast.warning("Insira uma tarefa");
         return;
       }
       createTask(taskData.title);
+      return;
     }
   }
 
   async function handleToggleTask(taskId: string, concluded: boolean) {
-    console.log(taskId, concluded);
+    toggleTasks({ taskId, concluded });
   }
 
-  function handleEditTask(taskData: { title: string; id?: string }) {}
+  function handleEditTask(taskData: { title: string; id?: string }) {
+    if (taskData.id)
+      updateTaskTitle({ id: taskData.id, title: taskData.title });
+  }
 
   return (
     <section

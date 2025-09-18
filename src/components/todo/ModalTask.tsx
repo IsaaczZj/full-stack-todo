@@ -25,7 +25,10 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
+    if (taskTitle === task?.title) {
+      toast.warning("As informações não foram alteradas");
+      return;
+    }
     onSave?.({
       title: taskTitle.trim(),
       id: task?.id,
@@ -51,10 +54,11 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
           value={taskTitle}
           autoFocus
         />
-
-        <div className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark">
-          <ButtonIcon icon="check" type="submit" loading={isLoading} />
-        </div>
+        <DialogClose asChild>
+          <div className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark">
+            <ButtonIcon icon="check" type="submit" loading={isLoading} />
+          </div>
+        </DialogClose>
       </form>
     </DialogContent>
   );
