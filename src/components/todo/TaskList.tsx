@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Text } from "../ui/text";
 import { Badge } from "../ui/badge";
 import { Dialog, DialogTrigger } from "../ui/dialog";
-import { ModalTaskProps } from "./ModalTaskProps";
+import { ModalTaskProps } from "./ModalTask";
 import { getTasks } from "@/actions/get-tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchTasks } from "@/api/fetchTasks";
@@ -36,7 +36,6 @@ export function TasksList() {
       toast.success("Tarefa deletada com sucesso");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
-    
   });
 
   function handleSaveTask(taskData: { title: string; id?: string }) {
@@ -52,12 +51,11 @@ export function TasksList() {
   }
 
   async function handleToggleTask(taskId: string, concluded: boolean) {
-      console.log(taskId, concluded);
-      
+    console.log(taskId, concluded);
   }
-  
+
   function handleEditTask(taskData: { title: string; id?: string }) {}
-  
+
   return (
     <section
       className="flex justify-center flex-col w-full mt-4

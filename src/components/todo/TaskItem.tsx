@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ModalTaskProps } from "./ModalTaskProps";
+import { ModalTaskProps } from "./ModalTask";
 
 interface TaskItemProps {
   task: Task;
@@ -50,7 +50,6 @@ export function TaskItem({
           onChange={(checked) => {
             onToggle?.(task.id, checked);
           }}
-      
           loading={isLoading}
         />
         <Text
