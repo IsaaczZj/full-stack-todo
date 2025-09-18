@@ -2,26 +2,44 @@
 import { Container } from "../ui/container";
 import { Text } from "../ui/text";
 import { ListCheck, Trash } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ConfirmClearTasksModal } from "./ConfirmClearTasksModal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchTasks } from "@/api/fetchTasks";
+import { deleteCompletedTasks } from "@/api/deleteCompletedTasks";
+import { toast } from "sonner";
+
 export function Footer() {
+  const { data: tasks = [] } = useQuery({
+    queryFn: fetchTasks,
+    queryKey: ["tasks"],
+  });
+  const concludedTasks = tasks?.filter((tasks) => tasks.concluded) || [];
+  const queryClient = useQueryClient();
+
+  function handleDelete() {
+    if (concludedTasks.length === 0) {
+      toast.warning("Não há tarefas concluidas para excluir");
+      return;
+    }
+    deleteCompleteTasksMutation();
+  }
+  const { mutate: deleteCompleteTasksMutation } = useMutation({
+    mutationFn: deleteCompletedTasks,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      toast.success("Tarefas deletadas com sucesso");
+    },
+  });
+
   return (
     <Container className="flex items-center  mt-3 md:mt-10 flex-col">
       <div className=" flex justify-center md:justify-between w-full mb-4">
         <div className="flex items-center gap-2">
           <ListCheck size={18} className="hidden md:block" />
           <Text variant="body-md-bold" className="hidden md:block">
-            Tarefas concluidas (2 / 5)
+            Tarefas concluidas {concludedTasks?.length} / {tasks?.length}
           </Text>
         </div>
         <AlertDialog>
@@ -33,12 +51,23 @@ export function Footer() {
               </Text>
             </button>
           </AlertDialogTrigger>
-          <ConfirmClearTasksModal />
+          <ConfirmClearTasksModal
+            deleteCompleteTasks={handleDelete}
+            concludedTasks={concludedTasks}
+          />
         </AlertDialog>
       </div>
 
       <div className="h-2 w-full bg-gray-200 rounded-md ">
-        <div className="h-full w-[50%] bg-green-dark rounded-md "></div>
+        <div
+          style={{
+            width:
+              tasks.length > 0
+                ? `${(concludedTasks.length / tasks.length) * 100}%`
+                : "0%",
+          }}
+          className={`h-full bg-green-dark rounded-md transition-all`}
+        ></div>
       </div>
     </Container>
   );

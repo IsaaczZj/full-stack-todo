@@ -18,8 +18,11 @@ import { updateTasks } from "@/api/updateTasks";
 import { Filters, FilterType } from "./Filters";
 export function TasksList() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentFilter, setCurrentFilter] = useState<FilterType>("completed");
+  const [currentFilter, setCurrentFilter] = useState<FilterType>("all");
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+
   const queryClient = useQueryClient();
+
   const { data: tasks = [], isLoading } = useQuery<Task[]>({
     queryFn: fetchTasks,
     queryKey: ["tasks"],
@@ -102,6 +105,22 @@ export function TasksList() {
       updateTaskTitle({ id: taskData.id, title: taskData.title });
   }
 
+  useEffect(() => {
+    switch (currentFilter) {
+      case "all":
+        setFilteredTasks(tasks);
+        break;
+      case "pending":
+        const pendingTasks = tasks.filter((task) => !task.concluded);
+        setFilteredTasks(pendingTasks);
+        break;
+      case "completed":
+        const completedTasks = tasks.filter((task) => task.concluded);
+        setFilteredTasks(completedTasks);
+        break;
+    }
+  }, [currentFilter, tasks]);
+
   return (
     <section
       className="flex justify-center flex-col w-full mt-4
@@ -127,7 +146,7 @@ export function TasksList() {
         </Text>
       ) : (
         !isLoading &&
-        tasks.map((task) => (
+        filteredTasks.map((task) => (
           <TaskItem
             key={task.id!}
             task={task}
