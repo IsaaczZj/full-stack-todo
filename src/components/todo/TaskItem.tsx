@@ -20,9 +20,16 @@ interface TaskItemProps {
   isLoading?: boolean;
   onEdit?: (taskData: { title: string; id?: string }) => void;
   onToggle?: (taskId: string, concluded: boolean) => void;
+  onDeleteTask?: (taskId: string) => void;
 }
 
-export function TaskItem({ task, isLoading, onEdit, onToggle }: TaskItemProps) {
+export function TaskItem({
+  task,
+  isLoading,
+  onEdit,
+  onToggle,
+  onDeleteTask,
+}: TaskItemProps) {
   if (isLoading || !task) {
     return (
       <Card className="w-full mt-4">
@@ -43,6 +50,7 @@ export function TaskItem({ task, isLoading, onEdit, onToggle }: TaskItemProps) {
           onChange={(checked) => {
             onToggle?.(task.id, checked);
           }}
+      
           loading={isLoading}
         />
         <Text
@@ -52,7 +60,12 @@ export function TaskItem({ task, isLoading, onEdit, onToggle }: TaskItemProps) {
         </Text>
 
         <div className="flex items-center gap-1">
-          <ButtonIcon variant="tertiary" icon="trash" loading={isLoading} />
+          <ButtonIcon
+            variant="tertiary"
+            icon="trash"
+            loading={isLoading}
+            onClick={() => onDeleteTask?.(task.id)}
+          />
           <Dialog>
             <DialogTrigger asChild>
               <ButtonIcon

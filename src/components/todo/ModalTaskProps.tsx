@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Text } from "../ui/text";
 import { Task } from "@/types/task";
-
+import { toast } from "sonner";
 interface ModalTaskProps {
   task?: Task;
   onSave?: (taskData: { title: string; id?: string }) => void;
@@ -24,15 +24,13 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
   const isEditing = !!task;
 
   const handleSave = () => {
-    if (taskTitle.trim()) {
-      onSave?.({
-        title: taskTitle.trim(),
-        id: task?.id,
-      });
+    onSave?.({
+      title: taskTitle.trim(),
+      id: task?.id,
+    });
 
-      if (!isEditing) {
-        setTaskTitle("");
-      }
+    if (!isEditing) {
+      setTaskTitle("");
     }
   };
   return (
@@ -48,33 +46,33 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
         className="flex items-center gap-4"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSave();
         }}
       >
         <Input
           className="flex-1 w-full"
           onChange={({ target }) => setTaskTitle(target.value)}
           value={taskTitle}
-          required
           autoFocus
         />
         <div className="flex items-center gap-1">
-          <DialogClose asChild>
-            <div
-              className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-gray-200 hover:bg-pink-base"
-              onClick={() => {}}
-            >
-              <ButtonIcon icon="x" variant="secondary" />
-            </div>
-          </DialogClose>
-          <DialogClose asChild>
-            <div
-              className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark"
+          <div
+            className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-gray-200 hover:bg-pink-base"
+            onClick={() => {}}
+          >
+            <ButtonIcon
+              icon="x"
+              variant="secondary"
+              onClick={() => setTaskTitle("")}
+            />
+          </div>
+
+          <div className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark">
+            <ButtonIcon
+              icon="check"
+              loading={isLoading}
               onClick={handleSave}
-            >
-              <ButtonIcon icon="check" loading={isLoading} />
-            </div>
-          </DialogClose>
+            />
+          </div>
         </div>
       </form>
     </DialogContent>

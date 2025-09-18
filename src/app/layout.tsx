@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${cairo.variable} antialiased font-sans bg-gray-100`}>
-        <Toaster richColors/>
+        <Toaster richColors position="top-right"/>
           <QueryProvider>{children}</QueryProvider>
         
       </body>

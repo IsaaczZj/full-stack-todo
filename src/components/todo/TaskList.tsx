@@ -12,7 +12,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchTasks } from "@/api/fetchTasks";
 import { createNewTask } from "@/api/createNewTask";
 import { toast } from "sonner";
+import { deleteTask } from "@/api/deleteTask";
 export function TasksList() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
   const { data: tasks = [], isLoading } = useQuery<Task[]>({
     queryFn: fetchTasks,
@@ -22,27 +24,46 @@ export function TasksList() {
   const { mutateAsync: createTask } = useMutation({
     mutationFn: createNewTask,
     onSuccess: (newTask) => {
-      queryClient.setQueryData(["tasks"], (cache = []) => [newTask, ...cache as Task[]]);
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+
       toast.success("Tarefa criada com sucesso");
+      setIsDialogOpen(false);
     },
+  });
+  const { mutateAsync: deletingTask } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: (e) => {
+      toast.success("Tarefa deletada com sucesso");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    
   });
 
   function handleSaveTask(taskData: { title: string; id?: string }) {
     if (!taskData.id) {
+      if (taskData.title.trim() === "") {
+        toast.warning("Título vazio", {
+          description: "Digite o título da tarefa",
+        });
+        return;
+      }
       createTask(taskData.title);
     }
   }
 
+  async function handleToggleTask(taskId: string, concluded: boolean) {
+      console.log(taskId, concluded);
+      
+  }
+  
   function handleEditTask(taskData: { title: string; id?: string }) {}
-
-  function handleToggleTask(taskId: string, concluded: boolean) {}
-
+  
   return (
     <section
       className="flex justify-center flex-col w-full mt-4
     "
     >
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button>Adicionar tarefa</Button>
         </DialogTrigger>
@@ -80,6 +101,7 @@ export function TasksList() {
             key={task.id!}
             task={task}
             onEdit={handleEditTask}
+            onDeleteTask={deletingTask}
             onToggle={handleToggleTask}
           />
         ))

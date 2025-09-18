@@ -10,7 +10,8 @@ export const createTask = async (title: string) => {
         title,
       },
     });
-    return newTask
+    if (!newTask) return;
+    return newTask;
   } catch (error) {
     throw error;
   }
