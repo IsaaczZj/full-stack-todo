@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { ButtonIcon } from "../ui/button-icon";
 import {
@@ -33,6 +33,12 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
       setTaskTitle("");
     }
   };
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    handleSave();
+  }
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -42,37 +48,16 @@ export function ModalTaskProps({ task, onSave, isLoading }: ModalTaskProps) {
           </Text>
         </DialogTitle>
       </DialogHeader>
-      <form
-        className="flex items-center gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
+      <form className="flex items-center gap-4" onSubmit={handleSubmit}>
         <Input
           className="flex-1 w-full"
           onChange={({ target }) => setTaskTitle(target.value)}
           value={taskTitle}
           autoFocus
         />
-        <div className="flex items-center gap-1">
-          <div
-            className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-gray-200 hover:bg-pink-base"
-            onClick={() => {}}
-          >
-            <ButtonIcon
-              icon="x"
-              variant="secondary"
-              onClick={() => setTaskTitle("")}
-            />
-          </div>
 
-          <div className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark">
-            <ButtonIcon
-              icon="check"
-              loading={isLoading}
-              onClick={handleSave}
-            />
-          </div>
+        <div className="h-6 w-6 p-1 inline-flex items-center justify-center rounded cursor-pointer transition bg-green-base hover:bg-green-dark">
+          <ButtonIcon icon="check" type="submit" loading={isLoading} />
         </div>
       </form>
     </DialogContent>
