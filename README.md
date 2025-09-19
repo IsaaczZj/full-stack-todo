@@ -1,6 +1,5 @@
 <img width="912" height="671" alt="image" src="https://github.com/user-attachments/assets/7918178d-05e0-47b1-aaa6-11402e5d1bb1" />
 
-
 # Full-Stack Todo App
 
 Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack, onde o usuário pode criar, gerenciar, filtrar e excluir suas tarefas diárias.
@@ -36,11 +35,10 @@ Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack
 
 ### Pré-requisitos
 
-- **Node.js** (versão 18 ou superior)
-- **Docker** e **Docker Compose** (para o banco de dados)
-- **pnpm** (recomendado) ou npm
+- **Docker** e **Docker Compose**
+- **Git** para clonagem do repositório
 
-### Passo a passo:
+### Opção 1: Executar Tudo com Docker (Recomendado)
 
 1.  **Clone o repositório:**
 
@@ -54,50 +52,70 @@ Este é um projeto de uma aplicação de lista de tarefas (TODO list) full-stack
     cd full-stack-todo
     ```
 
-3.  **Instale as dependências:** (Recomendado usar `pnpm`)
-
-    ```bash
-    pnpm install
-    ```
-
-4.  **Configure as variáveis de ambiente:**
-    Copie o arquivo `env.example` para um novo arquivo chamado `.env`:
+3.  **Configure as variáveis de ambiente:**
+    Copie o arquivo `env.example` para `.env`:
 
     ```bash
     cp env.example .env
     ```
 
-    O arquivo `.env` já vem configurado com a URL do banco PostgreSQL que será executado via Docker.
-
-5.  **Inicie o banco de dados com Docker:**
-    O projeto inclui um `docker-compose.yml` configurado com PostgreSQL. Execute:
+4.  **Execute a aplicação completa:**
 
     ```bash
-    docker-compose up -d
+    docker-compose up --build
     ```
 
-    Isso iniciará um container PostgreSQL na porta 5432.
+    Isso irá:
 
-6.  **Execute as migrações do banco de dados:**
-    Isso criará as tabelas necessárias no banco de dados:
+    - Construir a imagem da aplicação Next.js
+    - Iniciar o banco PostgreSQL
+    - Executar as migrações automaticamente
+    - Disponibilizar a aplicação em `http://localhost:3000`
+
+5.  **Para executar em background (opcional):**
+
+    ```bash
+    docker-compose up --build -d
+    ```
+
+### Opção 2: Desenvolvimento Local (Node.js + Docker para DB)
+
+1.  **Siga os passos 1-3 da Opção 1**
+
+2.  **Instale as dependências:** (Recomenda-se `pnpm`)
+
+    ```bash
+    pnpm install
+    ```
+
+3.  **Inicie apenas o banco de dados:**
+
+    ```bash
+    docker-compose up postgres -d
+    ```
+
+4.  **Execute as migrações:**
 
     ```bash
     pnpm prisma migrate dev
     ```
 
-7.  **Execute o servidor de desenvolvimento:**
+5.  **Execute o servidor de desenvolvimento:**
 
     ```bash
     pnpm run dev
     ```
 
-8.  Abra o navegador no endereço `http://localhost:3000`.
+6.  **Acesse:** `http://localhost:3000`
 
-### Comandos úteis:
+### Comandos Úteis:
 
-- **Parar o banco de dados:** `docker-compose down`
-- **Visualizar dados no Prisma Studio:** `pnpm prisma studio`
-- **Reset do banco de dados:** `pnpm prisma migrate reset`
+- **Parar todos os containers:** `docker-compose down`
+- **Ver logs da aplicação:** `docker-compose logs todo_app`
+- **Ver logs do banco:** `docker-compose logs postgres`
+- **Rebuild completo:** `docker-compose down && docker-compose up --build`
+- **Visualizar dados (desenvolvimento local):** `pnpm prisma studio`
+- **Reset do banco:** `docker-compose down -v && docker-compose up --build`
 
 ## Estrutura do Projeto
 

@@ -8,13 +8,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchTasks } from "@/api/fetchTasks";
 import { deleteCompletedTasks } from "@/api/deleteCompletedTasks";
 import { toast } from "sonner";
+import { Task } from "@/generated/prisma";
 
 export function Footer() {
   const { data: tasks = [] } = useQuery({
     queryFn: fetchTasks,
     queryKey: ["tasks"],
   });
-  const concludedTasks = tasks?.filter((tasks) => tasks.concluded) || [];
+  const concludedTasks = tasks?.filter((tasks:Task) => tasks.concluded) || [];
   const queryClient = useQueryClient();
 
   function handleDelete() {
