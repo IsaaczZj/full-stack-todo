@@ -3,7 +3,7 @@ default:
   services:
     - docker:24.0.5-dind
   before_script:
-    - echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
  
 
 variables:
@@ -26,4 +26,5 @@ variables:
 build:
   stage: build
   script:
-    - docker build -t my-docker-image .
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
