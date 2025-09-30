@@ -15,7 +15,7 @@ export function Footer() {
     queryFn: fetchTasks,
     queryKey: ["tasks"],
   });
-  const concludedTasks = tasks?.filter((tasks:Task) => tasks.concluded) || [];
+  const concludedTasks = tasks?.filter((tasks: Task) => tasks.concluded) || [];
   const queryClient = useQueryClient();
 
   function handleDelete() {
@@ -45,7 +45,10 @@ export function Footer() {
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button className="flex items-center justify-center cursor-pointer transition rounded-lg gap-2 bg-gray-200 hover:bg-pink-light h-15 px-4  border-pink-200 border-2">
+            <button
+              className="flex items-center justify-center cursor-pointer transition rounded-lg gap-2 bg-gray-200 hover:bg-pink-light h-15 px-4  border-pink-200 border-2"
+              disabled={concludedTasks.length === 0}
+            >
               <Trash size={18} className="text-gray-400" />
               <Text variant="body-md-bold" className="text-gray-400">
                 Limpar tarefas concluidas
